@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizador con YOLO</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Analizador con YOLO</h1>
+            <p>Detección inteligente de objetos, formas y colores</p>
+            <div id="modelStatus" class="status">🔄 Cargando modelo...</div>
+        </header>
+
+        <div class="upload-section">
+            <div class="tabs">
+                <button class="tab active" data-tab="upload">📤 Subir Imagen</button>
+                <button class="tab" data-tab="camera">📷 Usar Cámara</button>
+            </div>
+
+            <div class="tab-content active" id="upload-content">
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <button class="btn-primary" id="uploadBtn" disabled>
+                    <span id="uploadBtnText">Cargando modelo...</span>
+                </button>
+            </div>
+
+            <div class="tab-content" id="camera-content">
+                <div class="video-container">
+                    <video id="video" autoplay playsinline></video>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn-primary" id="captureBtn" disabled>Capturar y Analizar</button>
+                    <button class="btn-secondary" id="toggleCamera">Iniciar Cámara</button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p id="loadingText">Analizando con YOLO...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Análisis -->
+        <div class="modal" id="analysisModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📊 Resultado del Análisis</h2>
+                    <button class="close-btn" id="closeModal">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="analysis-grid">
+                        <div class="analysis-image">
+                            <img id="analyzedImage" src="" alt="Imagen analizada">
+                        </div>
+                        <div class="analysis-details">
+                            <div class="detail-section">
+                                <h3>🤖 Objetos Detectados</h3>
+                                <div id="detectionsList" class="detections-list"></div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>🎨 Color Dominante</h3>
+                                <div class="color-analysis">
+                                    <div id="colorBox" class="large-color-box"></div>
+                                    <div class="color-details">
+                                        <div class="color-detail-item">
+                                            <strong>Nombre:</strong> <span id="colorName"></span>
+                                        </div>
+                                        <div class="color-detail-item">
+                                            <strong>HEX:</strong> <span id="colorHex"></span>
+                                        </div>
+                                        <div class="color-detail-item">
+                                            <strong>RGB:</strong> <span id="colorRgb"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>📐 Forma Detectada</h3>
+                                <div class="shape-info">
+                                    <div id="shapeIcon" class="shape-icon"></div>
+                                    <div class="shape-name" id="shapeName"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>📅 Información</h3>
+                                <div class="info-detail">
+                                    <div><strong>Fecha:</strong> <span id="analysisDate"></span></div>
+                                    <div><strong>Hora:</strong> <span id="analysisTime"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="discardBtn">Descartar</button>
+                    <button class="btn-primary" id="saveBtn">Guardar en Historial</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="records-section">
+            <div class="records-header">
+                <h2>📚 Historial de Análisis (<span id="recordCount">0</span>)</h2>
+                <button class="btn-danger" id="clearAll">🗑️ Limpiar Todo</button>
+            </div>
+            <div class="records-grid" id="recordsGrid">
+                <div class="empty-state">
+                    <p>🤖 No hay imágenes analizadas aún</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display: none;"></canvas>
+    <canvas id="tempCanvas" style="display: none;"></canvas>
+    
+    <!-- TensorFlow.js LITE -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
